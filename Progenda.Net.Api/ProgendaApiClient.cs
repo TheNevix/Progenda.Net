@@ -107,5 +107,22 @@ namespace Progenda.Net.Api
                 return null;
             }
         }
+
+        public async Task<Patient> GetPatient(int centerId, string remoteId)
+        {
+            try
+            {
+                HttpResponseMessage response = await _httpClient.GetAsync($"{_baseUrl}/centers/{centerId}/patients/remote_id:{remoteId}");
+                response.EnsureSuccessStatusCode();
+                string responseBody = await response.Content.ReadAsStringAsync();
+                GetPatientResponse patientResponse = JsonConvert.DeserializeObject<GetPatientResponse>(responseBody);
+
+                return patientResponse?.Patient;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
     }
 }

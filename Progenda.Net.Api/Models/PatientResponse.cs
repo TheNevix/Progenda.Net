@@ -19,7 +19,7 @@ namespace Progenda.Net.Api.Models
         [JsonProperty("id")]
         public int Id { get; set; }
         [JsonProperty("remote_id")]
-        public int? RemoteId { get; set; }
+        public string? RemoteId { get; set; }
         [JsonProperty("first_name")]
         public string FirstName { get; set; }
         [JsonProperty("last_name")]
