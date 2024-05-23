@@ -25,27 +25,27 @@ namespace Progenda.Net.Api
             _httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(applicationName);
         }
 
-        public async Task<List<CenterDetails>> GetCenters()
+        public async Task<List<Center>> GetCenters()
         {
             try
             {
-                var request = new HttpRequestMessage(HttpMethod.Get, _baseUrl);
+                var request = new HttpRequestMessage(HttpMethod.Get, _baseUrl + "centers");
                 HttpResponseMessage response = await _httpClient.SendAsync(request);
                 response.EnsureSuccessStatusCode();
                 string responseBody = await response.Content.ReadAsStringAsync();
                 CenterResponse centerResponse = JsonConvert.DeserializeObject<CenterResponse>(responseBody);
 
-                List<CenterDetails> centerDetailsList = new List<CenterDetails>();
+                List<Center> centers = new List<Center>();
 
-                if (centerResponse != null && centerResponse.Centers != null)
+                if (centerResponse != null && centerResponse.CenterDetails != null)
                 {
-                    foreach (var center in centerResponse.Centers)
+                    foreach (var center in centerResponse.CenterDetails)
                     {
-                        centerDetailsList.Add(center.CenterDetails);
+                        centers.Add(center.Center);
                     }
                 }
 
-                return centerDetailsList;
+                return centers;
             }
             catch (Exception e)
             {

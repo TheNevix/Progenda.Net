@@ -5,16 +5,16 @@ namespace Progenda.Net.Api.Dtos
     public class CenterResponse
     {
         [JsonProperty("centers")]
-        public List<Center> Centers { get; set; }
-    }
-
-    public class Center
-    {
-        [JsonProperty("center")]
-        public CenterDetails CenterDetails { get; set; }
+        public List<CenterDetails> CenterDetails { get; set; }
     }
 
     public class CenterDetails
+    {
+        [JsonProperty("center")]
+        public Center Center { get; set; }
+    }
+
+    public class Center
     {
         [JsonProperty("id")]
         public int Id { get; set; }
