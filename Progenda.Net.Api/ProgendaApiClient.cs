@@ -80,5 +80,32 @@ namespace Progenda.Net.Api
                 return null;
             }
         }
+
+        public async Task<List<Patient>> GetPatients(int centerId, int? page = 1, int? since = 100000)
+        {
+            try
+            {
+                HttpResponseMessage response = await _httpClient.GetAsync($"{_baseUrl}/centers/{centerId}/patients?page={page}&since={since}");
+                response.EnsureSuccessStatusCode();
+                string responseBody = await response.Content.ReadAsStringAsync();
+                PatientResponse patientResponse = JsonConvert.DeserializeObject<PatientResponse>(responseBody);
+
+                List<Patient> patientList = new List<Patient>();
+
+                if (patientResponse != null && patientResponse.PatientDetails != null)
+                {
+                    foreach (var patientWrapper in patientResponse.PatientDetails)
+                    {
+                        patientList.Add(patientWrapper.Patient);
+                    }
+                }
+
+                return patientList;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
     }
 }
