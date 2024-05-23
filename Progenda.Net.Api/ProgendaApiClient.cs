@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using Progenda.Net.Api.Dtos;
+using Progenda.Net.Api.Models;
 using System.Net.Http.Headers;
 using System.Text;
 
@@ -50,6 +50,33 @@ namespace Progenda.Net.Api
             catch (Exception e)
             {
                 Console.WriteLine($"Request error: {e.Message}");
+                return null;
+            }
+        }
+
+        public async Task<List<Calendar>> GetCalendars()
+        {
+            try
+            {
+                HttpResponseMessage response = await _httpClient.GetAsync(_baseUrl + "calendars");
+                response.EnsureSuccessStatusCode();
+                string responseBody = await response.Content.ReadAsStringAsync();
+                CalendarResponse calendarResponse = JsonConvert.DeserializeObject<CalendarResponse>(responseBody);
+
+                List<Calendar> calendarList = new List<Calendar>();
+
+                if (calendarResponse != null && calendarResponse.Calendars != null)
+                {
+                    foreach (var calendarWrapper in calendarResponse.Calendars)
+                    {
+                        calendarList.Add(calendarWrapper.Calendar);
+                    }
+                }
+
+                return calendarList;
+            }
+            catch (Exception e)
+            {
                 return null;
             }
         }

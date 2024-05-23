@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Progenda.Net.Api.Dtos
+namespace Progenda.Net.Api.Models
 {
     public class CenterResponse
     {
