@@ -4,6 +4,15 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <Title>Progenda.Net</Title>
+    <PackageId>Progenda.Net</PackageId>
+    <Authors>TheNevix</Authors>
+    <Company>TheNevix</Company>
+    <Product>Progenda.Net</Product>
+    <Description>A c# library to communicate with the Progenda API.</Description>
+    <RepositoryUrl>https://github.com/TheNevix/Progenda.Net</RepositoryUrl>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Version>1.0.2</Version>
   </PropertyGroup>
 
   <ItemGroup>

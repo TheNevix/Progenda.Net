@@ -13,7 +13,7 @@ namespace Progenda.Net.Api
         private readonly string _base64Token;
         private readonly HttpClient _httpClient;
 
-        public ProgendaApiClient(string email, string token)
+        public ProgendaApiClient(string email, string token, string applicationName)
         {
             _email = email;
             _token = token;
@@ -22,20 +22,32 @@ namespace Progenda.Net.Api
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", _base64Token);
             _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            _httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(applicationName);
         }
 
-        public async Task<CenterResponse> GetCenters()
+        public async Task<List<CenterDetails>> GetCenters()
         {
             try
             {
-                HttpResponseMessage response = await _httpClient.GetAsync(_baseUrl + "centers");
+                var request = new HttpRequestMessage(HttpMethod.Get, _baseUrl);
+                HttpResponseMessage response = await _httpClient.SendAsync(request);
                 response.EnsureSuccessStatusCode();
                 string responseBody = await response.Content.ReadAsStringAsync();
-
                 CenterResponse centerResponse = JsonConvert.DeserializeObject<CenterResponse>(responseBody);
-                return centerResponse;
+
+                List<CenterDetails> centerDetailsList = new List<CenterDetails>();
+
+                if (centerResponse != null && centerResponse.Centers != null)
+                {
+                    foreach (var center in centerResponse.Centers)
+                    {
+                        centerDetailsList.Add(center.CenterDetails);
+                    }
+                }
+
+                return centerDetailsList;
             }
-            catch (HttpRequestException e)
+            catch (Exception e)
             {
                 Console.WriteLine($"Request error: {e.Message}");
                 return null;
