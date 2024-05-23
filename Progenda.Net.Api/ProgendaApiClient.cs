@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Progenda.Net.Api.Models;
+using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
 
@@ -198,6 +199,25 @@ namespace Progenda.Net.Api
             catch (Exception e)
             {
                 return null;
+            }
+        }
+
+        public async Task<bool> DeletePatient(int centerId, string remoteId)
+        {
+            try
+            {
+                HttpResponseMessage response = await _httpClient.DeleteAsync($"{_baseUrl}/centers/{centerId}/patients/remote_id:{remoteId}");
+                response.EnsureSuccessStatusCode();
+                
+                if(response.StatusCode == HttpStatusCode.NoContent)
+                {
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception e)
+            {
+                return false;
             }
         }
     }
