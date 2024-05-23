@@ -86,7 +86,7 @@ namespace Progenda.Net.Api
         {
             try
             {
-                HttpResponseMessage response = await _httpClient.GetAsync($"{_baseUrl}/centers/{centerId}/patients?page={page}&since={since}");
+                HttpResponseMessage response = await _httpClient.GetAsync($"{_baseUrl}/centers/{centerId}/patients?page={page}");
                 response.EnsureSuccessStatusCode();
                 string responseBody = await response.Content.ReadAsStringAsync();
                 PatientResponse patientResponse = JsonConvert.DeserializeObject<PatientResponse>(responseBody);
@@ -218,6 +218,52 @@ namespace Progenda.Net.Api
             catch (Exception e)
             {
                 return false;
+            }
+        }
+
+        public async Task<List<Patient>> BulkUpdatePatients(int centerId, List<BulkUpdatePatient> patients)
+        {
+            try
+            {
+                var body = new
+                {
+                    patients_collection = new
+                    {
+                        patients = patients.Select(p => new
+                        {
+                            patient = p
+                        }).ToList()
+                    }
+                };
+
+                var jsonSettings = new JsonSerializerSettings
+                {
+                    NullValueHandling = NullValueHandling.Ignore
+                };
+                var jsonBody = JsonConvert.SerializeObject(body, jsonSettings);
+                var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+
+                HttpResponseMessage response = await _httpClient.PostAsync($"{_baseUrl}/centers/{centerId}/patients_collections", content);
+                response.EnsureSuccessStatusCode();
+                string responseBody = await response.Content.ReadAsStringAsync();
+
+                PatientResponse patientResponse = JsonConvert.DeserializeObject<PatientResponse>(responseBody);
+
+                List<Patient> patientList = new List<Patient>();
+
+                if (patientResponse != null && patientResponse.PatientDetails != null)
+                {
+                    foreach (var patientWrapper in patientResponse.PatientDetails)
+                    {
+                        patientList.Add(patientWrapper.Patient);
+                    }
+                }
+
+                return patientList;
+            }
+            catch (Exception e)
+            {
+                return null;
             }
         }
     }
