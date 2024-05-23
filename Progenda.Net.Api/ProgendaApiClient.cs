@@ -124,5 +124,33 @@ namespace Progenda.Net.Api
                 return null;
             }
         }
+
+        public async Task<Patient> UpdatePatientRemoteId(int centerId, int patientId, string remoteId)
+        {
+            try
+            {
+                var body = new
+                {
+                    patient = new
+                    {
+                        remote_id = remoteId
+                    }
+                };
+
+                var jsonBody = JsonConvert.SerializeObject(body);
+                var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+
+                HttpResponseMessage response = await _httpClient.PutAsync($"{_baseUrl}/centers/{centerId}/patients/{patientId}", content);
+                response.EnsureSuccessStatusCode();
+                string responseBody = await response.Content.ReadAsStringAsync();
+                GetPatientResponse patientResponse = JsonConvert.DeserializeObject<GetPatientResponse>(responseBody);
+
+                return patientResponse?.Patient;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
     }
 }
