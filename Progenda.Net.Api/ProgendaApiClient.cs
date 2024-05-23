@@ -176,5 +176,29 @@ namespace Progenda.Net.Api
                 return null;
             }
         }
+
+        public async Task<Patient> CreatePatient(int centerId, CreatePatientRequest request)
+        {
+            try
+            {
+                var jsonSettings = new JsonSerializerSettings
+                {
+                    NullValueHandling = NullValueHandling.Ignore
+                };
+                var jsonBody = JsonConvert.SerializeObject(request, jsonSettings);
+                var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+
+                HttpResponseMessage response = await _httpClient.PostAsync($"{_baseUrl}/centers/{centerId}/patients", content);
+                response.EnsureSuccessStatusCode();
+                string responseBody = await response.Content.ReadAsStringAsync();
+                GetPatientResponse patientResponse = JsonConvert.DeserializeObject<GetPatientResponse>(responseBody);
+
+                return patientResponse?.Patient;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
     }
 }
