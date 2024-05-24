@@ -266,5 +266,34 @@ namespace Progenda.Net.Api
                 return null;
             }
         }
+
+        public async Task<List<Appointment>> GetAppointments(int calendarId)
+        {
+            try
+            {
+                HttpResponseMessage response = await _httpClient.GetAsync($"{_baseUrl}/calendars/{calendarId}/appointments");
+                response.EnsureSuccessStatusCode();
+                string responseBody = await response.Content.ReadAsStringAsync();
+                GetAppointmentsResponse appointmentResponse = JsonConvert.DeserializeObject<GetAppointmentsResponse>(responseBody);
+
+                List<Appointment> appointmentList = new List<Appointment>();
+
+                if (appointmentResponse != null && appointmentResponse.Appointments != null)
+                {
+                    foreach (var appointmentWrapper in appointmentResponse.Appointments)
+                    {
+                        appointmentList.Add(appointmentWrapper.Appointment);
+                    }
+                }
+
+                return appointmentList;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+
+
     }
 }
