@@ -338,5 +338,24 @@ namespace Progenda.Net.Api
                 return null;
             }
         }
+
+        public async Task<bool> DeleteAppointment(int calendarId, string remoteId)
+        {
+            try
+            {
+                HttpResponseMessage response = await _httpClient.DeleteAsync($"{_baseUrl}/calendars/{calendarId}/appointments/remote_id:{remoteId}");
+                response.EnsureSuccessStatusCode();
+
+                if (response.StatusCode == HttpStatusCode.NoContent)
+                {
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
     }
 }
