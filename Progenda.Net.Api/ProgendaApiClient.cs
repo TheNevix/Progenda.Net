@@ -322,6 +322,21 @@ namespace Progenda.Net.Api
             }
         }
 
+        public async Task<Appointment> GetAppointment(int calendarId, string remoteId)
+        {
+            try
+            {
+                HttpResponseMessage response = await _httpClient.GetAsync($"{_baseUrl}/calendars/{calendarId}/appointments/remote_id:{remoteId}");
+                response.EnsureSuccessStatusCode();
+                string responseBody = await response.Content.ReadAsStringAsync();
+                GetAppointmentResponse appointmentResponse = JsonConvert.DeserializeObject<GetAppointmentResponse>(responseBody);
 
+                return appointmentResponse?.Appointment;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
     }
 }
