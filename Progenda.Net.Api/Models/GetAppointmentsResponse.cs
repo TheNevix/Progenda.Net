@@ -44,7 +44,7 @@ namespace Progenda.Net.Api.Models
         public string Status { get; set; }
 
         [JsonProperty("patient_id")]
-        public int PatientId { get; set; }
+        public int? PatientId { get; set; } = null;
 
         [JsonProperty("patient_remote_id")]
         public string PatientRemoteId { get; set; }
