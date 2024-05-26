@@ -26,6 +26,10 @@ namespace Progenda.Net.Api
             _httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(applicationName);
         }
 
+        /// <summary>
+        /// Gets all the centers of a Progenda account.
+        /// </summary>
+        /// <returns>A list of <see cref="Center"/> or null if an error occured.</returns>
         public async Task<List<Center>> GetCenters()
         {
             try
@@ -55,6 +59,10 @@ namespace Progenda.Net.Api
             }
         }
 
+        /// <summary>
+        /// Gets all the calendars of a Progenda account.
+        /// </summary>
+        /// <returns>A list of <see cref="Calendar"/> or null if an error occured.</returns>
         public async Task<List<Calendar>> GetCalendars()
         {
             try
@@ -82,6 +90,12 @@ namespace Progenda.Net.Api
             }
         }
 
+        /// <summary>
+        /// Gets all the patients with paging of a center.
+        /// </summary>
+        /// <param name="centerId">The ID of a center.</param>
+        /// <param name="page">The page (default is 1).</param>
+        /// <returns>A list of <see cref="Patient"/> or null if an error occured.</returns>
         public async Task<List<Patient>> GetPatients(int centerId, int? page = 1, int? since = 100000)
         {
             try
@@ -109,6 +123,12 @@ namespace Progenda.Net.Api
             }
         }
 
+        /// <summary>
+        /// Gets a specefic patient.
+        /// </summary>
+        /// <param name="centerId">The ID of a center.</param>
+        /// <param name="remoteId">The remote ID of the patient.</param>
+        /// <returns>A <see cref="Patient"/> or null if an error occured.</returns>
         public async Task<Patient> GetPatient(int centerId, string remoteId)
         {
             try
@@ -126,6 +146,13 @@ namespace Progenda.Net.Api
             }
         }
 
+        /// <summary>
+        /// Updates the remote ID of a patient.
+        /// </summary>
+        /// <param name="centerId">The ID of a center.</param>
+        /// <param name="patientId">The ID of the patient (ID from Progenda).</param>
+        /// <param name="remoteId">The remote ID that you want to assign.</param>
+        /// <returns>A <see cref="Patient"/> or null if an error occured.</returns>
         public async Task<Patient> UpdatePatientRemoteId(int centerId, int patientId, string remoteId)
         {
             try
@@ -154,6 +181,13 @@ namespace Progenda.Net.Api
             }
         }
 
+        /// <summary>
+        /// Updates a patient.
+        /// </summary>
+        /// <param name="centerId">The ID of a center.</param>
+        /// <param name="remoteId">The remote ID of the patient.</param>
+        /// <param name="request">A <see cref="UpdatePatientRequest"/> object with the properties you want to update.</param>
+        /// <returns>A <see cref="Patient"/> or null if an error occured.</returns>
         public async Task<Patient> UpdatePatient(int centerId, string remoteId, UpdatePatientRequest request)
         {
             try
@@ -178,6 +212,12 @@ namespace Progenda.Net.Api
             }
         }
 
+        /// <summary>
+        /// Creates a patient.
+        /// </summary>
+        /// <param name="centerId">The ID of a center.</param>
+        /// <param name="request">An <see cref="UpdatePatientRequest"/> object.</param>
+        /// <returns>A <see cref="Patient"/> or null if an error occured.</returns>
         public async Task<Patient> CreatePatient(int centerId, CreatePatientRequest request)
         {
             try
@@ -202,6 +242,12 @@ namespace Progenda.Net.Api
             }
         }
 
+        /// <summary>
+        /// Deletes a patient.
+        /// </summary>
+        /// <param name="centerId">The ID of a center.</param>
+        /// <param name="remoteId">The remote ID of the patient.</param>
+        /// <returns>True or false if an error occured.</returns>
         public async Task<bool> DeletePatient(int centerId, string remoteId)
         {
             try
@@ -221,6 +267,12 @@ namespace Progenda.Net.Api
             }
         }
 
+        /// <summary>
+        /// Updates/creates multiple patients.
+        /// </summary>
+        /// <param name="centerId">The ID of a center.</param>
+        /// <param name="patients">A list of patients to update or create.</param>
+        /// <returns>A list of <see cref="Patient"/> or null if an error occured.</returns>
         public async Task<List<Patient>> BulkUpdatePatients(int centerId, List<BulkUpdatePatient> patients)
         {
             try
@@ -267,6 +319,11 @@ namespace Progenda.Net.Api
             }
         }
 
+        /// <summary>
+        /// Gets all appointments of a calendar.
+        /// </summary>
+        /// <param name="calendarId">The ID of a calendar.</param>
+        /// <returns>A <see cref="Appointment"/> or null if an error occured.</returns>
         public async Task<List<Appointment>> GetAppointments(int calendarId)
         {
             try
@@ -294,6 +351,13 @@ namespace Progenda.Net.Api
             }
         }
 
+        /// <summary>
+        /// Updates the remote ID of an appointment.
+        /// </summary>
+        /// <param name="calendarId">The ID of a calendar.</param>
+        /// <param name = "appointmentId" > The ID of an appointment.</param>
+        /// <param name = "remoteId" > The remote ID to assign.</param>
+        /// <returns>A <see cref="Appointment"/> or null if an error occured.</returns>
         public async Task<Appointment> UpdateAppointmentRemoteId(int calendarId, int appointmentId, string remoteId)
         {
             try
@@ -322,6 +386,12 @@ namespace Progenda.Net.Api
             }
         }
 
+        /// <summary>
+        /// Gets an appointment by remote ID
+        /// </summary>
+        /// <param name="calendarId">The ID of a calendar.</param>
+        /// <param name = "remoteId" > The remote ID of an appointment.</param>
+        /// <returns>A <see cref="Appointment"/> or null if an error occured.</returns>
         public async Task<Appointment> GetAppointment(int calendarId, string remoteId)
         {
             try
@@ -339,6 +409,12 @@ namespace Progenda.Net.Api
             }
         }
 
+        /// <summary>
+        /// Delete an appointment
+        /// </summary>
+        /// <param name="calendarId">The ID of a calendar.</param>
+        /// <param name = "remoteId" > The remote ID to assign.</param>
+        /// <returns>True or false if an error occured.</returns>
         public async Task<bool> DeleteAppointment(int calendarId, string remoteId)
         {
             try
@@ -358,6 +434,13 @@ namespace Progenda.Net.Api
             }
         }
 
+        /// <summary>
+        /// Updates an appointment.
+        /// </summary>
+        /// <param name="calendarId">The ID of a calendar.</param>
+        /// <param name = "remoteId" > The remote ID to assign.</param>
+        /// <param name="request">A <see cref="UpdateAppointmentRequest"/> object with the properties you want to update.</param>
+        /// <returns>A <see cref="Appointment"/> or null if an error occured.</returns>
         public async Task<Appointment> UpdateAppointment(int calendarId, string remoteId, UpdateAppointmentRequest request)
         {
             try
@@ -382,6 +465,12 @@ namespace Progenda.Net.Api
             }
         }
 
+        /// <summary>
+        /// Creates an appointment
+        /// </summary>
+        /// <param name="calendarId">The ID of a calendar.</param>
+        /// <param name="request">An <see cref="CreateAppointmentRequest"/> object.</param>
+        /// <returns>A <see cref="Appointment"/> or null if an error occured.</returns>
         public async Task<Appointment> CreateAppointment(int calendarId, CreateAppointmentRequest request)
         {
             try
