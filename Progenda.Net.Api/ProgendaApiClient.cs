@@ -387,7 +387,7 @@ namespace Progenda.Net.Api
         }
 
         /// <summary>
-        /// Gets an appointment by remote ID
+        /// Gets an appointment by remote ID.
         /// </summary>
         /// <param name="calendarId">The ID of a calendar.</param>
         /// <param name = "remoteId" > The remote ID of an appointment.</param>
@@ -410,7 +410,7 @@ namespace Progenda.Net.Api
         }
 
         /// <summary>
-        /// Delete an appointment
+        /// Deletes an appointment.
         /// </summary>
         /// <param name="calendarId">The ID of a calendar.</param>
         /// <param name = "remoteId" > The remote ID to assign.</param>
@@ -466,7 +466,7 @@ namespace Progenda.Net.Api
         }
 
         /// <summary>
-        /// Creates an appointment
+        /// Creates an appointment.
         /// </summary>
         /// <param name="calendarId">The ID of a calendar.</param>
         /// <param name="request">An <see cref="CreateAppointmentRequest"/> object.</param>
@@ -492,6 +492,58 @@ namespace Progenda.Net.Api
                 GetAppointmentResponse appointmentResponse = JsonConvert.DeserializeObject<GetAppointmentResponse>(responseBody);
 
                 return appointmentResponse?.Appointment;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Updates/creates multiple appointments.
+        /// </summary>
+        /// <param name="calendarId">The ID of a calendar.</param>
+        /// <param name="appointments">A list of appointments to update or create.</param>
+        /// <returns>A list of <see cref="Appointment"/> or null if an error occured.</returns>
+        public async Task<List<Appointment>> BulkUpdateAppointments(int calendarId, List<BulkUpdatePatient> appointments)
+        {
+            try
+            {
+                var body = new
+                {
+                    appointments_collection = new
+                    {
+                        appointments = appointments.Select(a => new
+                        {
+                            appointment = a
+                        }).ToList()
+                    }
+                };
+
+                var jsonSettings = new JsonSerializerSettings
+                {
+                    NullValueHandling = NullValueHandling.Ignore
+                };
+                var jsonBody = JsonConvert.SerializeObject(body, jsonSettings);
+                var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+
+                HttpResponseMessage response = await _httpClient.PostAsync($"{_baseUrl}/calendars/{calendarId}/appointments_collections", content);
+                response.EnsureSuccessStatusCode();
+                string responseBody = await response.Content.ReadAsStringAsync();
+
+                GetAppointmentsResponse appointmentResponse = JsonConvert.DeserializeObject<GetAppointmentsResponse>(responseBody);
+
+                List<Appointment> appointmentList = new List<Appointment>();
+
+                if (appointmentResponse != null && appointmentResponse.Appointments != null)
+                {
+                    foreach (var appointmentWrapper in appointmentResponse.Appointments)
+                    {
+                        appointmentList.Add(appointmentWrapper.Appointment);
+                    }
+                }
+
+                return appointmentList;
             }
             catch (Exception e)
             {
