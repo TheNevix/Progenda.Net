@@ -551,5 +551,89 @@ namespace Progenda.Net.Api
             }
         }
 
+        /// <summary>
+        /// Gets all services.
+        /// </summary>
+        /// <param name="calendarId">The ID of a calendar.</param>
+        /// <returns>A <see cref="Serivce"/> or null if an error occured.</returns>
+        public async Task<List<Serivce>> GetServices(int calendarId)
+        {
+            try
+            {
+                HttpResponseMessage response = await _httpClient.GetAsync($"{_baseUrl}/calendars/{calendarId}/services");
+                response.EnsureSuccessStatusCode();
+                string responseBody = await response.Content.ReadAsStringAsync();
+                GetServicesResponse serviceResponse = JsonConvert.DeserializeObject<GetServicesResponse>(responseBody);
+
+                List<Serivce> serviceList = new List<Serivce>();
+
+                if (serviceResponse != null && serviceResponse.Services != null)
+                {
+                    foreach (var serviceWrapper in serviceResponse.Services)
+                    {
+                        serviceList.Add(serviceWrapper.Serivce);
+                    }
+                }
+
+                return serviceList;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Updates/creates multiple services.
+        /// </summary>
+        /// <param name="calendarId">The ID of a calendar.</param>
+        /// <param name="services">A list of services to update or create.</param>
+        /// <returns>A list of <see cref="Serivce"/> or null if an error occured.</returns>
+        public async Task<List<Serivce>> BulkUpdateServices(int calendarId, List<BulkUpdateService> services)
+        {
+            try
+            {
+                var body = new
+                {
+                    services_collection = new
+                    {
+                        services = services.Select(s => new
+                        {
+                            service = s
+                        }).ToList()
+                    }
+                };
+
+                var jsonSettings = new JsonSerializerSettings
+                {
+                    NullValueHandling = NullValueHandling.Ignore
+                };
+                var jsonBody = JsonConvert.SerializeObject(body, jsonSettings);
+                var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+
+                HttpResponseMessage response = await _httpClient.PostAsync($"{_baseUrl}/calendars/{calendarId}/services_collections", content);
+                response.EnsureSuccessStatusCode();
+                string responseBody = await response.Content.ReadAsStringAsync();
+
+                GetServicesResponse serviceResponse = JsonConvert.DeserializeObject<GetServicesResponse>(responseBody);
+
+                List<Serivce> serviceList = new List<Serivce>();
+
+                if (serviceResponse != null && serviceResponse.Services != null)
+                {
+                    foreach (var serviceWrapper in serviceResponse.Services)
+                    {
+                        serviceList.Add(serviceWrapper.Serivce);
+                    }
+                }
+
+                return serviceList;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+
     }
 }
