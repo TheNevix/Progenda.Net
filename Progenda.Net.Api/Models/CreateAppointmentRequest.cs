@@ -4,14 +4,23 @@ namespace Progenda.Net.Api.Models
 {
     public class CreateAppointmentRequest
     {
-        [JsonProperty("remote_id")]
-        public required string RemoteId { get; set; }
         [JsonProperty("patient_remote_id")]
         public string? PatientRemoteId { get; set; } = null;
+#if NET8_0
+        [JsonProperty("remote_id")]
+        public required string RemoteId { get; set; }
         [JsonProperty("start")]
         public required string Start { get; set; }
         [JsonProperty("stop")]
-        public required string End { get; set; } 
+        public required string End { get; set; }
+#else
+        [JsonProperty("remote_id")]
+        public string RemoteId { get; set; }
+        [JsonProperty("start")]
+        public string Start { get; set; }
+        [JsonProperty("stop")]
+        public string End { get; set; }
+#endif
         [JsonProperty("notes")]
         public string? Notes { get; set; } = null;
         [JsonProperty("color")]

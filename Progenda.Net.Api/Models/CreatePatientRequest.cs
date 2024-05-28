@@ -4,6 +4,7 @@ namespace Progenda.Net.Api.Models
 {
     public class CreatePatientRequest
     {
+#if NET8_0
         [JsonProperty("remote_id")]
         public required string RemoteId { get; set; }
         [JsonProperty("first_name")]
@@ -14,6 +15,18 @@ namespace Progenda.Net.Api.Models
         public required string Email { get; set; }
         [JsonProperty("phone_number")]
         public required string PhoneNumber { get; set; }
+#else
+        [JsonProperty("remote_id")]
+        public string RemoteId { get; set; }
+        [JsonProperty("first_name")]
+        public string FirstName { get; set; }
+        [JsonProperty("last_name")]
+        public string LastName { get; set; }
+        [JsonProperty("email")]
+        public string Email { get; set; }
+        [JsonProperty("phone_number")]
+        public string PhoneNumber { get; set; }
+#endif
         [JsonProperty("birthdate")]
         public string Birthdate { get; set; } = null;
         [JsonProperty("address")]

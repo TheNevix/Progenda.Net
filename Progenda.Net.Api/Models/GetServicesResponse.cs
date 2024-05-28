@@ -11,10 +11,10 @@ namespace Progenda.Net.Api.Models
     public class ServiceDetails
     {
         [JsonProperty("service")]
-        public Serivce Serivce { get; set; }
+        public Service Serivce { get; set; }
     }
 
-    public class Serivce
+    public class Service
     {
         [JsonProperty("id")]
         public string Id { get; set; }

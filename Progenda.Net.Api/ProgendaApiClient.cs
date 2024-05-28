@@ -555,8 +555,8 @@ namespace Progenda.Net.Api
         /// Gets all services.
         /// </summary>
         /// <param name="calendarId">The ID of a calendar.</param>
-        /// <returns>A <see cref="Serivce"/> or null if an error occured.</returns>
-        public async Task<List<Serivce>> GetServices(int calendarId)
+        /// <returns>A <see cref="Service"/> or null if an error occured.</returns>
+        public async Task<List<Service>> GetServices(int calendarId)
         {
             try
             {
@@ -565,7 +565,7 @@ namespace Progenda.Net.Api
                 string responseBody = await response.Content.ReadAsStringAsync();
                 GetServicesResponse serviceResponse = JsonConvert.DeserializeObject<GetServicesResponse>(responseBody);
 
-                List<Serivce> serviceList = new List<Serivce>();
+                List<Service> serviceList = new List<Service>();
 
                 if (serviceResponse != null && serviceResponse.Services != null)
                 {
@@ -588,8 +588,8 @@ namespace Progenda.Net.Api
         /// </summary>
         /// <param name="calendarId">The ID of a calendar.</param>
         /// <param name="services">A list of services to update or create.</param>
-        /// <returns>A list of <see cref="Serivce"/> or null if an error occured.</returns>
-        public async Task<List<Serivce>> BulkUpdateServices(int calendarId, List<BulkUpdateService> services)
+        /// <returns>A list of <see cref="Service"/> or null if an error occured.</returns>
+        public async Task<List<Service>> BulkUpdateServices(int calendarId, List<BulkUpdateService> services)
         {
             try
             {
@@ -617,7 +617,7 @@ namespace Progenda.Net.Api
 
                 GetServicesResponse serviceResponse = JsonConvert.DeserializeObject<GetServicesResponse>(responseBody);
 
-                List<Serivce> serviceList = new List<Serivce>();
+                List<Service> serviceList = new List<Service>();
 
                 if (serviceResponse != null && serviceResponse.Services != null)
                 {
