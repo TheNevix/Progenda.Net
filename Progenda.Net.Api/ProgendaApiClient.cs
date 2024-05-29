@@ -635,5 +635,37 @@ namespace Progenda.Net.Api
             }
         }
 
+        /// <summary>
+        /// Gets open slots for a calendar based on a service id
+        /// </summary>
+        /// <param name="calendarId">The ID of a calendar.</param>
+        /// <param name="serviceId">The ID of a service.</param>
+        /// <returns>A list of <see cref="Suggestion"/> or null if an error occured.</returns>
+        public async Task<List<Suggestion>> GetOpenSlots(int calendarId, int serviceId)
+        {
+            try
+            {
+                HttpResponseMessage response = await _httpClient.GetAsync($"{_baseUrl}/calendars/{calendarId}/suggestions?service_id={serviceId}");
+                response.EnsureSuccessStatusCode();
+                string responseBody = await response.Content.ReadAsStringAsync();
+                GetSuggestionsResponse suggestionResponse = JsonConvert.DeserializeObject<GetSuggestionsResponse>(responseBody);
+
+                List<Suggestion> suggestionsList = new List<Suggestion>();
+
+                if (suggestionResponse != null && suggestionResponse.Suggestions != null)
+                {
+                    foreach (var suggestionWrapper in suggestionResponse.Suggestions)
+                    {
+                        suggestionsList.Add(suggestionWrapper.Suggestion);
+                    }
+                }
+
+                return suggestionsList;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
     }
 }
