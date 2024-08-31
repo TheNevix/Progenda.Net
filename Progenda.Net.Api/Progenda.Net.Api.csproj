@@ -13,7 +13,7 @@
     <Description>A c# package to communicate with the Progenda API.</Description>
     <RepositoryUrl>https://github.com/TheNevix/Progenda.Net</RepositoryUrl>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>2.0.1</Version>
+    <Version>2.0.2</Version>
     <PackageReleaseNotes>Fixed a typo. Added support for netstandard2.0</PackageReleaseNotes>
   </PropertyGroup>
 
