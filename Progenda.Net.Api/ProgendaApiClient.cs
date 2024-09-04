@@ -449,7 +449,16 @@ namespace Progenda.Net.Api
                 {
                     NullValueHandling = NullValueHandling.Ignore
                 };
-                var jsonBody = JsonConvert.SerializeObject(request, jsonSettings);
+
+                var body = new
+                {
+                    appointment = new
+                    {
+                        patient_remote_id = request.PatientRemoteId
+                    }
+                };
+
+                var jsonBody = JsonConvert.SerializeObject(body, jsonSettings);
                 var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
 
                 HttpResponseMessage response = await _httpClient.PutAsync($"{_baseUrl}/calendars/{calendarId}/appointments/remote_id:{remoteId}", content);
